@@ -1,0 +1,11 @@
+micronaut:
+  metrics:
+    enabled: true
+  server:
+    port: 8081
+  caches:
+    headlines:
+      maximumSize: 20
+      charset: UTF-8
+      heap:
+        maximum-size: 200Mb

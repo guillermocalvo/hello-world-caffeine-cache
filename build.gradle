@@ -1,0 +1,63 @@
+plugins {
+    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("io.micronaut.application") version "4.0.0"
+    id("io.micronaut.aot") version "4.0.0"
+}
+
+version = "0.1"
+group = "hello.world"
+
+repositories {
+    maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+        mavenContent { snapshotsOnly() }
+    }
+    mavenCentral()
+}
+
+dependencies {
+    annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
+    implementation("io.micronaut.cache:micronaut-cache-caffeine")
+    implementation("io.micronaut.serde:micronaut-serde-jackson")
+    implementation ('javax.cache:cache-api:1.1.1')
+    runtimeOnly("ch.qos.logback:logback-classic")
+    testImplementation("io.micronaut:micronaut-http-client")
+    runtimeOnly("org.yaml:snakeyaml")
+    compileOnly("org.projectlombok:lombok")
+    annotationProcessor ('org.projectlombok:lombok:1.18.12')
+    implementation "io.micronaut.micrometer:micronaut-micrometer-core"
+    implementation "io.micronaut.micrometer:micronaut-micrometer-registry-statsd"
+    implementation "io.micronaut:micronaut-management"
+}
+
+
+application {
+    mainClass.set("hello.world.Application")
+}
+java {
+    sourceCompatibility = JavaVersion.toVersion("17")
+    targetCompatibility = JavaVersion.toVersion("17")
+}
+
+graalvmNative.toolchainDetection = false
+micronaut {
+    runtime("netty")
+    testRuntime("junit5")
+    processing {
+        incremental(true)
+        annotations("hello.world.*")
+    }
+    aot {
+    // Please review carefully the optimizations enabled below
+    // Check https://micronaut-projects.github.io/micronaut-aot/latest/guide/ for more details
+        optimizeServiceLoading = false
+        convertYamlToJava = false
+        precomputeOperations = true
+        cacheEnvironment = true
+        optimizeClassLoading = true
+        deduceEnvironment = true
+        optimizeNetty = true
+    }
+}
+
+
+
