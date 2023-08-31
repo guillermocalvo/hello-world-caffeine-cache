@@ -10,6 +10,7 @@ micronaut:
     port: 8081
   caches:
     headlines:
+      record-stats: true
       maximumSize: 20
       charset: UTF-8
       heap:
