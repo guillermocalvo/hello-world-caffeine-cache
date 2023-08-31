@@ -25,7 +25,7 @@ dependencies {
     compileOnly("org.projectlombok:lombok")
     annotationProcessor ('org.projectlombok:lombok:1.18.12')
     implementation "io.micronaut.micrometer:micronaut-micrometer-core"
-    implementation "io.micronaut.micrometer:micronaut-micrometer-registry-statsd"
+    implementation "io.micronaut.micrometer:micronaut-micrometer-registry-prometheus"
     implementation "io.micronaut:micronaut-management"
 }
 

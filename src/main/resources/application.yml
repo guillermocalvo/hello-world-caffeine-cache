@@ -1,6 +1,11 @@
 micronaut:
   metrics:
     enabled: true
+    export:
+      prometheus:
+        enabled: true
+        step: PT10S
+        descriptions: true
   server:
     port: 8081
   caches:
@@ -9,3 +14,7 @@ micronaut:
       charset: UTF-8
       heap:
         maximum-size: 200Mb
+
+endpoints:
+  prometheus:
+    sensitive: false
