@@ -11,7 +11,7 @@ micronaut:
   caches:
     headlines:
       record-stats: true
-      maximumSize: 20
+      maximumSize: 2
       charset: UTF-8
       heap:
         maximum-size: 200Mb
