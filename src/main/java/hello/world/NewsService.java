@@ -14,34 +14,38 @@ import lombok.extern.slf4j.Slf4j;
 @Singleton
 @CacheConfig("headlines")
 public class NewsService {
-    HashMap<String, String> headlines = new HashMap<String, String>(){{put("October", "Cached October");
+    private HashMap<String, String> headlines = new HashMap<>() {{
+        put("October", "Cached October");
     }};
 
     @Cacheable
-    public String headlines(String month){
-         try{
-            TimeUnit.SECONDS.sleep(5);
-            log.info("Not from cache");
-            return headlines.get(month);
-            }catch(InterruptedException e){
-            System.out.println("Interrupted Exception thrown from index");
-            }
-        return"nope";
-
+    public String getHeadline(String month) {
+        log.info("Not from cache");
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (InterruptedException e) {
+            log.error("Interrupted Exception thrown from cache-get", e);
+        }
+        return headlines.get(month);
     }
 
-    @CachePut(parameters="month")
-    public HashMap<String, String> addHeadline(String month, String headline){
-        String l = headlines.getOrDefault(month, "");
-        headlines.put(l, headline);
-        return headlines;
+    @CachePut(parameters = "month")
+    public String addHeadline(String month, String headline) {
+        log.info("CachePut month={} headline={}", month, headline);
+        headlines.put(month, headline);
+        return headline;
     }
 
-    @CacheInvalidate(parameters="month")
-    public HashMap<String, String> removeHeadline(String month, String headline){
-        String l = headlines.getOrDefault(month, "");
-        headlines.remove(l, headline);
-        return headlines;
+    @CacheInvalidate(parameters = "month")
+    public void removeHeadline(String month) {
+        log.info("CacheInvalidate month={}", month);
+        headlines.remove(month);
+    }
+
+    @CacheInvalidate(all = true)
+    public void removeAll() {
+        log.info("CacheInvalidate (all)");
+        headlines.clear();
     }
 
 }

@@ -2,26 +2,41 @@ package hello.world;
 
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
-import io.micronaut.http.annotation.Put;
 import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
 
 @Slf4j
 @Controller
 public class NewsController {
 
-@Inject
-NewsService newsService;
+    @Inject
+    NewsService newsService;
 
-    @Get("/{month}")
-    public String index(String month){
-        log.info("hit service");
-        new News(month, Collections.singletonList(newsService.headlines(month)));
-        return newsService.headlines.get(month);
+    @Get("/cache-get/{month}")
+    public String cacheGet(String month) {
+        log.info("hit cache-get");
+        String headline = newsService.getHeadline(month);
+        return "cache-get: month=" + month + " headline=" + headline;
+    }
 
+    @Get("/cache-put/{month}/{headline}")
+    public String cachePut(String month, String headline) {
+        log.info("hit cache-put");
+        String cached = newsService.addHeadline(month, headline);
+        return "cache-put: month=" + month + " headline=" + cached;
+    }
+
+    @Get("/cache-invalidate/{month}")
+    public String cacheInvalidate(String month) {
+        log.info("hit cache-invalidate");
+        newsService.removeHeadline(month);
+        return "cache-invalidate: month=" + month;
+    }
+
+    @Get("/cache-invalidate/ALL")
+    public String cacheInvalidateAll() {
+        log.info("hit cache-invalidate ALL");
+        newsService.removeAll();
+        return "cache-invalidate: ALL";
     }
 }
